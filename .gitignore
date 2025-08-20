@@ -1,0 +1,29 @@
+# Node modules
+/node_modules
+
+# Build output
+/dist
+/build
+
+# Compiled output
+/tmp
+/out-tsc
+
+# IDE-specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Dependency files
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+
+# Cache
+.angular/cache
