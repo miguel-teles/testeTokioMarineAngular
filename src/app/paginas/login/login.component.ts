@@ -1,30 +1,54 @@
 import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {ContaModel} from '../../models/conta';
 import {LoginService} from './service/login.service';
+import {AuthGuardService, CONTA} from './service/auth-guard.service';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {contaNaoSelecionadaValidator} from './validator/conta-nao-selecionada-validator';
+import {NavigationService} from '../../services/nagivation/navigation.service';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [
+    ReactiveFormsModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
 
-  service = inject(LoginService);
   contas: WritableSignal<ContaModel[]> = signal([]);
   error = signal('')
-  contaSelecionada: WritableSignal<ContaModel | undefined>  = signal(undefined);
+
+  formGroup = new FormGroup({
+    contaSelecionada: new FormControl<ContaModel | undefined>(undefined, contaNaoSelecionadaValidator()),
+  });
+
+
+  constructor(private navigationService: NavigationService,
+              private loginService: LoginService,) {
+  }
 
   ngOnInit() {
-    this.service.getContas().subscribe(contas => {
+    this.loginService.getContas().subscribe(contas => {
       this.contas.set(contas);
     }, error => {
-      let errorResponse = this.service.client.trataException(error);
+      let errorResponse = this.loginService.client.trataException(error);
       this.error.set(errorResponse.mensagem)
     })
   }
 
   selecionarConta(conta: ContaModel) {
-    this.contaSelecionada.set(conta);
+    this.formGroup.get('contaSelecionada')?.setValue(conta);
+  }
+
+  entrar() {
+    if (this.getContaSelecionada()) {
+      localStorage.setItem(CONTA, this.getContaSelecionada().id.toString())
+      this.navigationService.goToHome();
+    }
+  }
+
+  getContaSelecionada(): ContaModel {
+    return this.formGroup.get('contaSelecionada')?.value!;
   }
 }
