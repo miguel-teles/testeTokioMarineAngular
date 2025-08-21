@@ -1,0 +1,25 @@
+<div>
+  <h1 class="mb-4">Transferências agendadas</h1>
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th scope="col">Conta destino</th>
+      <th scope="col">Valor</th>
+      <th scope="col">Taxa</th>
+      <th scope="col">Data agendada</th>
+      <th scope="col">Data criação</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (transferencia of transferencias(); track transferencia.dataCriacao) {
+        <tr>
+          <td>{{transferencia.contaDestino.id}} - {{transferencia.contaDestino.nome}}</td>
+          <td>{{transferencia.valor}}</td>
+          <td>{{transferencia.taxa}}</td>
+          <td>{{this.formatDateString(transferencia.dataTransferencia)}}</td>
+          <td>{{this.formatDateString(transferencia.dataCriacao)}}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

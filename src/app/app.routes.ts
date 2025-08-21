@@ -16,13 +16,13 @@ export const routes: Routes = [
       {
         path: 'nova-transferencia',
         loadComponent: () => {
-          return import('./componentes/nova-transacao/nova-transacao.component').then(m => m.NovaTransacaoComponent)
+          return import('./componentes/transferencias/nova-transferencia/nova-transacao.component').then(m => m.NovaTransacaoComponent)
         }
       },
       {
         path: 'transferencias',
         loadComponent: () => {
-          return import('./componentes/transferencias-table/transferencias-table.component').then(m => m.TransferenciasTableComponent)
+          return import('./componentes/transferencias/transferencias-table/transferencias-table.component').then(m => m.TransferenciasTableComponent)
         }
       }
     ]
