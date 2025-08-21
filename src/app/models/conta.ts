@@ -1,4 +1,4 @@
-export interface ContaModel {
-  id: number;
-  nome: string;
+export class ContaModel {
+  id: number | undefined;
+  nome: string | undefined;
 }

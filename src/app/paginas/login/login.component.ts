@@ -1,10 +1,10 @@
-import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, signal, WritableSignal} from '@angular/core';
 import {ContaModel} from '../../models/conta';
 import {LoginService} from './service/login.service';
-import {AuthGuardService, CONTA} from './service/auth-guard.service';
+import {AuthGuardService} from './service/auth-guard.service';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {contaNaoSelecionadaValidator} from './validator/conta-nao-selecionada-validator';
 import {NavigationService} from '../../services/nagivation/navigation.service';
+import {ErrorResponseModel} from '../../models/error-response-model';
 
 @Component({
   selector: 'app-login',
@@ -14,41 +14,28 @@ import {NavigationService} from '../../services/nagivation/navigation.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  contas: WritableSignal<ContaModel[]> = signal([]);
   error = signal('')
 
-  formGroup = new FormGroup({
-    contaSelecionada: new FormControl<ContaModel | undefined>(undefined, contaNaoSelecionadaValidator()),
+  loginFormGroup = new FormGroup({
+    login: new FormControl('', [Validators.required]),
+    senha: new FormControl('', [Validators.required]),
   });
 
 
   constructor(private navigationService: NavigationService,
-              private loginService: LoginService,) {
-  }
-
-  ngOnInit() {
-    this.loginService.getContas().subscribe(contas => {
-      this.contas.set(contas);
-    }, error => {
-      let errorResponse = this.loginService.client.trataException(error);
-      this.error.set(errorResponse.mensagem)
-    })
-  }
-
-  selecionarConta(conta: ContaModel) {
-    this.formGroup.get('contaSelecionada')?.setValue(conta);
+              private loginService: LoginService,
+              private AuthGuardService: AuthGuardService) {
   }
 
   entrar() {
-    if (this.getContaSelecionada()) {
-      localStorage.setItem(CONTA, this.getContaSelecionada().id.toString())
-      this.navigationService.goToHome();
-    }
-  }
-
-  getContaSelecionada(): ContaModel {
-    return this.formGroup.get('contaSelecionada')?.value!;
+    this.loginService.login(this.loginFormGroup.get('login')?.value!, this.loginFormGroup.get('senha')?.value!)
+      ?.subscribe(response => {
+        this.AuthGuardService.logar(response);
+      }, error => {
+        let errorResponse = this.loginService.client.trataException(error);
+        this.error.set(errorResponse.message);
+      });
   }
 }

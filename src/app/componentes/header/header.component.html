@@ -1,0 +1,17 @@
+<div class="w-100 p-3 mb-5">
+  <ul class="nav nav-tabs" #nav>
+    <li class="nav-item">
+      <a class="nav-link active" style="cursor: pointer" id="a-transferencias" (click)="this.selecionaMenuTransferencias()">Transferências</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="cursor: pointer" id="a-nova-transferencia" (click)="this.selecionaMenuNovaTransferencia()">Nova transferência</a>
+    </li>
+    <div class="ml-auto py-2 px-3">
+      <h4 class="mb-0">
+        <span class="badge badge-secondary">
+        Conta: {{this.contaLogada().id }} - {{this.contaLogada().nome }}
+      </span>
+      </h4>
+    </div>
+  </ul>
+</div>

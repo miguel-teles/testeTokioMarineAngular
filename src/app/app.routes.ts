@@ -7,11 +7,25 @@ export const routes: Routes = [
     redirectTo: ''
   },
   {
-   path: '',
-   loadComponent: () => {
-     return import('./paginas/home/home.component').then(m => m.HomeComponent);
-   },
+    path: '',
+    loadComponent: () => {
+      return import('./paginas/home/home.component').then(m => m.HomeComponent);
+    },
     canActivate: [AuthGuardService],
+    children: [
+      {
+        path: 'nova-transferencia',
+        loadComponent: () => {
+          return import('./componentes/nova-transacao/nova-transacao.component').then(m => m.NovaTransacaoComponent)
+        }
+      },
+      {
+        path: 'transferencias',
+        loadComponent: () => {
+          return import('./componentes/transferencias-table/transferencias-table.component').then(m => m.TransferenciasTableComponent)
+        }
+      }
+    ]
   },
   {
     path: 'login',

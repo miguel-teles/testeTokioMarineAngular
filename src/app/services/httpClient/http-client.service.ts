@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment.development';
 import {ErrorResponseModel} from '../../models/error-response-model';
+import {Endpoints} from './endpoints';
+import {AuthGuardService} from '../../paginas/login/service/auth-guard.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +14,13 @@ export class HttpClientService {
   public static GET = 'get'
   public static POST = 'post'
 
-  constructor() {
+  constructor(private AuthGuardService: AuthGuardService,
+              private http: HttpClient) {
   }
 
-  http = inject(HttpClient);
-
   public sendHttpRequest<T>(metodo: string, httpMetodo: string, rq: any): Observable<T> {
+    this.AuthGuardService.canActivate();
+
     let endpoint = this.montaEndpoint(metodo);
     switch (httpMetodo) {
       case HttpClientService.POST:
@@ -47,6 +50,9 @@ export class HttpClientService {
     let headers: HttpHeaders = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Accept', '*/*');
+    if (method != Endpoints.LOGIN) {
+      headers = headers.append('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    }
     return headers;
   }
 
@@ -55,7 +61,7 @@ export class HttpClientService {
     if (error.status === 0) {
       errorResponse = {
         status: 0,
-        mensagem: 'Erro interno :(',
+        message: 'Erro interno :(',
         erros: []
       }
     } else {
