@@ -13,8 +13,8 @@ export class LoginService {
   client = inject(HttpClientService);
 
 
-  login(login: string, senha: string): Observable<LoginRS> {
-    const request: LoginRQ = new LoginRQ(login, senha);
+  login(_login: string, _senha: string): Observable<LoginRS> {
+    const request: LoginRQ = {login: _login, senha: _senha};
     return this.client.sendHttpRequest(Endpoints.LOGIN, HttpClientService.POST, request);
   }
 }

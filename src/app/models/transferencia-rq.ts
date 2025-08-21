@@ -1,5 +1,5 @@
-export class TransferenciaRq {
+export interface TransferenciaRq {
   contaDestino: number | undefined;
-  valor!: number;
+  valor: number;
   dataTransferencia: string | undefined;
 }

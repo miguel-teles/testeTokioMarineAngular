@@ -1,8 +1,8 @@
 import {ContaModel} from './conta';
 
-export class TransferenciaRs {
+export interface TransferenciaRs {
   contaDestino: ContaModel | undefined;
-  valor!: number;
+  valor: number;
   taxa: number | undefined;
   dataTransferencia: string | undefined;
   dataCriacao: string | undefined

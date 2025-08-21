@@ -16,7 +16,7 @@ import {NavigationService} from '../../services/nagivation/navigation.service';
 })
 export class HomeComponent implements OnInit {
 
-  contaLogada: WritableSignal<ContaModel>  = signal(new ContaModel())
+  contaLogada: WritableSignal<ContaModel>  = signal({id: undefined, nome: undefined});
 
   constructor(private navigationService: NavigationService) {
   }
