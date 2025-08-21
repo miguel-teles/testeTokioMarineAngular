@@ -1,46 +1,138 @@
-<form>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Email</label>
-      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+<div class="container w-50">
+  <h1 class="mb-4">Agendar nova transferência</h1>
+
+  @if (this.error()) {
+    <div class="alert alert-danger mb-4" role="alert">
+      {{ this.error() }}
     </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Password</label>
-      <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+  } @else if (this.sucesso()) {
+    <div class="alert alert-info mb-4" role="alert">
+      {{ this.sucesso() }}
     </div>
-  </div>
-  <div class="form-group">
-    <label for="inputAddress">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-  </div>
-  <div class="form-group">
-    <label for="inputAddress2">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCity">City</label>
-      <input type="text" class="form-control" id="inputCity">
+  }
+
+  <form class="p-3 border rounded">
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="inputEmail4">Conta destinatária</label>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle form-control w-100" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            @if (this.contaDestinoSelecionada()) {
+              {{ this.contaDestinoSelecionada()?.id }} - {{ this.contaDestinoSelecionada()?.nome }}
+            } @else {
+              Selecione a conta destinatária
+            }
+          </button>
+          <ul class="dropdown-menu w-100">
+            @for (conta of this.listaContas(); track conta.id) {
+              @if (!contaDestinoSelecionada() || contaDestinoSelecionada()?.id != conta.id) {
+                <li><a class="dropdown-item" (click)="this.selecionarConta(conta)">{{ conta.id }} - {{ conta.nome }}</a>
+                </li>
+              }
+            }
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="form-group col-md-4">
-      <label for="inputState">State</label>
-      <select id="inputState" class="form-control">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="form-group col-md-2">
-      <label for="inputZip">Zip</label>
-      <input type="text" class="form-control" id="inputZip">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
-</form>
+    <form [formGroup]="valoresFormGroup" #valoresFormComponent="ngForm">
+      <h4 class="text-muted mb-3 mt-3">Data do débito</h4>
+      <form [formGroup]="dataFormGroup" #dataFormComponent="ngForm">
+        <div class="form-row">
+          <div class="form-group col-md-2">
+            <label for="dia">Dia</label>
+            <input type="number"
+                   class="form-control"
+                   min="1"
+                   [formControl]="dataFormGroup.controls.diaTransferencia"
+                   id="dia" placeholder="{{this.dataAtual.dia}}"
+                   max="31">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="dia">Mês</label>
+            <input type="number"
+                   class="form-control"
+                   id="dia"
+                   min="{{this.dataAtual.mes}}"
+                   [formControl]="dataFormGroup.controls.mesTransferencia"
+                   placeholder="{{this.dataAtual.mes}}"
+                   max="12">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="dia">Ano</label>
+            <input type="number"
+                   class="form-control"
+                   id="dia"
+                   min="{{this.dataAtual.ano}}"
+                   [formControl]="dataFormGroup.controls.anoTransferencia"
+                   placeholder="{{this.dataAtual.ano}}">
+          </div>
+
+          <div class="form-group col-md-6">
+            <div class="d-flex justify-content-end">
+              <div class="form-group col-md-4 pr-0 d-flex flex-column">
+                <label for="dia" class="text-center">Hora</label>
+                <input type="number"
+                       class="form-control"
+                       id="dia"
+                       max="23"
+                       min="0"
+                       [formControl]="dataFormGroup.controls.horaTransferencia"
+                       placeholder="{{this.dataAtual.hora}}">
+              </div>
+              <div class="form-group">
+                <label><span>&nbsp;</span></label>
+                <div class="d-flex form-control border-0 p-2 flex-column text-center align-content-center">:</div>
+              </div>
+              <div class="form-group col-md-4 pl-0 d-flex flex-column">
+                <label for="dia" class="text-center">Minuto</label>
+                <input type="number"
+                       class="form-control"
+                       id="dia"
+                       max="59"
+                       min="0"
+                       [formControl]="dataFormGroup.controls.minutoTransferencia"
+                       placeholder="{{this.dataAtual.minuto}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <h4 class="text-muted mb-3 mt-3">Valores da transferência</h4>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="valor">Valor</label>
+              <input type="number"
+                     class="form-control"
+                     id="valor"
+                     [formControl]="valoresFormGroup.controls.valor"
+                     placeholder="20.50">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="taxa">Taxa</label>
+              <input type="number"
+                     class="form-control"
+                     id="taxa"
+                     readonly
+                     disabled value="{{this.taxaCalculada()}}">
+            </div>
+            <div class="form-group col-md-4">
+              <label><span>&nbsp;</span></label>
+              <button class="btn btn-primary form-control"
+                      [disabled]="!valoresFormComponent.form.valid || !dataFormComponent.form.valid"
+                      (click)="this.simularTaxa()">Calcular taxa
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit"
+              class="btn btn-primary"
+              (click)="this.agendarTransferencia()"
+              [disabled]="!valoresFormComponent.form.valid || !dataFormComponent.form.valid || this.contaDestinoSelecionada() == undefined">Agendar
+      </button>
+    </form>
+  </form>
+</div>

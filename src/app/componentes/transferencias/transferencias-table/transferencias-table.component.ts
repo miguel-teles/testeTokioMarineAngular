@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {TransferenciaService} from '../services/transferencia.service';
-import {Transferencia} from '../../../models/transferencia';
+import {TransferenciaRs} from '../../../models/transferencia-rs';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -11,7 +11,7 @@ import { DatePipe } from '@angular/common';
 })
 export class TransferenciasTableComponent implements OnInit {
 
-  transferencias: WritableSignal<Transferencia[]> = signal([])
+  transferencias: WritableSignal<TransferenciaRs[]> = signal([])
   error = signal('')
 
   constructor(private transferenciaService: TransferenciaService) {
